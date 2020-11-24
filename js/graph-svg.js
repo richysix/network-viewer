@@ -42,8 +42,8 @@ const testing = true;
 const debug = true;
 
 if (testing) {
-    nodes_data_file = "http://localhost:8010/data/nodes.csv";
-    edges_data_file = "http://localhost:8010/data/edges.csv";
+    nodes_data_file = "http://localhost:8010/data/nodes-test.csv";
+    edges_data_file = "http://localhost:8010/data/edges-test.csv";
 }
 Promise.all([
     d3.csv(nodes_data_file),
