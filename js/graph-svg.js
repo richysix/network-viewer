@@ -54,7 +54,8 @@ function draw_network(node_data, edge_data) {
         .enter().append("line")
           .attr("stroke-width", 2);
     
-    //draw circles for the nodes 
+    //draw circles for the nodes
+    const node_unselected_color = "#eeeeee";
     var nodes = svg.append("g")
             .attr("class", "nodes")
             .selectAll("circle")
@@ -62,7 +63,7 @@ function draw_network(node_data, edge_data) {
             .enter()
             .append("circle")
             .attr("r", 10)
-            .attr("fill", "#aaaaaa")
+            .attr("fill", node_unselected_color)
             .attr("stroke", "#333333")
             .attr("cx", width / 2)
             .attr("cy", height / 2);
@@ -74,11 +75,20 @@ function draw_network(node_data, edge_data) {
     function colour_cluster(d) {
         cluster_idx = d.cluster;
         if (debug) {
+            //console.log(d);
             console.log(cluster_idx);
         }
-        svg.selectAll("circle")
-            .filter(function(d){ return d.cluster ==  cluster_idx ? this : null; })
-            .attr("fill", cluster_fill_colour(d));
+        if (d3.select(this).classed("selected")) {
+            svg.selectAll("circle")
+                .filter(function(d){ return d.cluster ==  cluster_idx ? this : null; })
+                .attr("fill", node_unselected_color)
+                .each(function(){ this.classList.toggle("selected"); });
+        } else {
+            svg.selectAll("circle")
+                .filter(function(d){ return d.cluster ==  cluster_idx ? this : null; })
+                .attr("fill", cluster_fill_colour(d))
+                .each(function(){ this.classList.toggle("selected"); });
+        }
     }
     
     nodes.on("mouseover", node_info)
