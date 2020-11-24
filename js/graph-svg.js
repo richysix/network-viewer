@@ -73,10 +73,12 @@ function draw_network(node_data, edge_data) {
     
     function colour_cluster(d) {
         cluster_idx = d.cluster;
-        console.log(cluster_idx);
+        if (debug) {
+            console.log(cluster_idx);
+        }
         svg.selectAll("circle")
             .filter(function(d){ return d.cluster ==  cluster_idx ? this : null; })
-            .each(function(){ this.classList.toggle("selected"); });
+            .attr("fill", cluster_fill_colour(d));
     }
     
     nodes.on("mouseover", node_info)
@@ -88,7 +90,9 @@ function draw_network(node_data, edge_data) {
     
     function node_info(d) {
         box_width = 40 + d.name.length*6 + 10;
-        console.log(box_width);
+        if (debug) {
+            console.log(box_width);
+        }
         tooltip_div.html("name = " + d.name + "<br/>"  + "cluster = " + d.cluster)	
                     .style("left", (d3.event.pageX) + "px")		
                     .style("top", (d3.event.pageY - 28) + "px")
@@ -140,5 +144,15 @@ function draw_network(node_data, edge_data) {
             .attr("y2", function(d) { return d.target.y; });
     }
     
+    // Colours
+    const scale = d3.scaleOrdinal(d3.schemeTableau10);
+    cluster_fill_colour = function(d) {
+        if (debug) {
+            console.log(d.cluster);
+            console.log(scale(d.cluster));
+        }
+        return scale(d.cluster);
+    }
+
 }
 
