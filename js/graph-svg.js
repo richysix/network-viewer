@@ -1,6 +1,9 @@
 const testing = true;
 const debug = true;
 
+width = 960;
+height = 600;
+
 if (testing) {
     nodes_data_file = "http://localhost:8010/data/nodes-test.csv";
     edges_data_file = "http://localhost:8010/data/edges-test.csv";
@@ -18,10 +21,15 @@ function draw_network(node_data, edge_data) {
         console.log(edge_data);
     }
     
-    var svg = d3.select("svg"),
-        width = +svg.attr("width"),
-        height = +svg.attr("height");
+    var svg = d3.select("svg")
+        .attr("viewBox", [0, 0, width, height]);
     
+    // Add zoom
+    const zoom = d3.zoom()
+        .extent([[0, 0], [width, height]])
+        .scaleExtent([1, 40])
+        .on("zoom", zoomed);    
+
     //set up the simulation 
     //nodes only for now 
     var simulation = d3.forceSimulation()
@@ -67,7 +75,11 @@ function draw_network(node_data, edge_data) {
             .attr("stroke", "#333333")
             .attr("cx", width / 2)
             .attr("cy", height / 2);
-    
+            
+    const g = svg.selectAll("g");
+
+    svg.call(zoom);
+
     simulation.on("tick", tickActions );
     
     nodes.on("click", colour_cluster);
@@ -112,6 +124,12 @@ function draw_network(node_data, edge_data) {
             .style("opacity", '.9');
     }
     
+    function zoomed() {
+        if (debug) {
+            console.log(d3.event);
+        }
+        g.attr("transform", d3.event.transform);
+    }
     
     //create drag handler with d3.drag()
     //var drag_handler = d3.drag()
