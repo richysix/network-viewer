@@ -2,7 +2,7 @@ set.seed(652)
 num_nodes <- 1000
 tmp_node_data <- data.frame(id = sprintf('ENSTEST%011d', seq_len(num_nodes)),
                             name = sprintf('gene-%d', seq_len(num_nodes)),
-                            cluster = sample(0:9, num_nodes, replace = TRUE))
+                            cluster = sample(0:19, num_nodes, replace = TRUE))
 
 write.csv(tmp_node_data, file = 'nodes-test.csv')
 
