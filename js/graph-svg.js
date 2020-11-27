@@ -1,8 +1,8 @@
 const testing = true;
 const debug = true;
 
-width = 960;
-height = 600;
+var width = 960;
+var height = 600;
 
 if (testing) {
     nodes_data_file = "http://localhost:8010/data/nodes-test.csv";
@@ -12,7 +12,7 @@ Promise.all([
     d3.csv(nodes_data_file),
     d3.csv(edges_data_file)
 ]).then(function(data) {
-    draw_network(data[0], data[1]);
+    draw_network( data[0], data[1] );
 });
 
 function draw_network(node_data, edge_data) {
@@ -21,7 +21,7 @@ function draw_network(node_data, edge_data) {
         console.log(edge_data);
     }
     
-    var svg = d3.select("svg")
+    const svg = d3.select("svg")
         .attr("viewBox", [0, 0, width, height]);
     
     // Add zoom
@@ -84,6 +84,8 @@ function draw_network(node_data, edge_data) {
     
     nodes.on("click", colour_cluster);
     
+    // Colours
+    const scale = d3.scaleOrdinal(d3.schemeTableau10);
     function colour_cluster(d) {
         cluster_idx = d.cluster;
         if (debug) {
@@ -98,7 +100,7 @@ function draw_network(node_data, edge_data) {
         } else {
             svg.selectAll("circle")
                 .filter(function(d){ return d.cluster ==  cluster_idx ? this : null; })
-                .attr("fill", cluster_fill_colour(d))
+                .attr("fill", scale(d.cluster))
                 .each(function(){ this.classList.toggle("selected"); });
         }
     }
@@ -131,31 +133,18 @@ function draw_network(node_data, edge_data) {
         g.attr("transform", d3.event.transform);
     }
     
-    //create drag handler with d3.drag()
-    //var drag_handler = d3.drag()
-    //	.on("start", drag_start)
-    //	.on("drag", drag_drag)
-    //	.on("end", drag_end);
-    //
-    //function drag_start(d) {
-    //  if (!d3.event.active) simulation.alphaTarget(0.3);
-    //  d.fx = d.x;
-    //  d.fy = d.y;
-    //}    
-    //
-    //function drag_drag(d) {
-    //  d.fx = d3.event.x;
-    //  d.fy = d3.event.y;
-    //}
-    //
-    //function drag_end(d) {
-    //  if (!d3.event.active) simulation.alphaTarget(0);
-    //  d.fx = d.x;
-    //  d.fy = d.y;
-    //}
-    //
-    ////apply the drag_handler to our circles 
-    //drag_handler(nodes);
+    // Add functions for Zoom In, Out and Reset
+    d3.select("#zoom-in").on("click", function(){ svg.transition().call(zoom.scaleBy, 2); });
+    d3.select("#zoom-out").on("click", function(){ svg.transition().call(zoom.scaleBy, 0.5); });
+    d3.select("#reset").on("click", reset );
+    function reset() {
+        svg.transition().duration(750).call(
+          zoom.transform,
+          d3.zoomIdentity,
+          d3.zoomTransform(svg.node()).invert([width / 2, height / 2])
+        );
+    }
+    
     function tickActions() {
         //update circle positions to reflect node updates on each tick of the simulation 
         nodes
@@ -171,16 +160,5 @@ function draw_network(node_data, edge_data) {
             .attr("x2", function(d) { return d.target.x; })
             .attr("y2", function(d) { return d.target.y; });
     }
-    
-    // Colours
-    const scale = d3.scaleOrdinal(d3.schemeTableau10);
-    cluster_fill_colour = function(d) {
-        if (debug) {
-            console.log(d.cluster);
-            console.log(scale(d.cluster));
-        }
-        return scale(d.cluster);
-    }
-
 }
 
