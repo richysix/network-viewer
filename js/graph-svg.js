@@ -75,7 +75,7 @@ function draw_network(node_data, edge_data) {
     
     //Create the link force 
     //We need the id accessor to use named sources and targets 
-    var link_force =  d3.forceLink(edge_data).id(function id(d) {return d.index;});
+    var link_force =  d3.forceLink(edge_data).id(function id(d) {return d.node_idx;});
     
     simulation.force("links", link_force);
     
