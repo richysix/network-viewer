@@ -1,16 +1,25 @@
 const testing = false;
+const mini = true;
 const debug = true;
 
 var width = 960;
 var height = 960;
 
+// set input data based on testing status
 if (testing) {
-    nodes_data_file = "http://localhost:8010/data/nodes-test.csv";
-    edges_data_file = "http://localhost:8010/data/edges-test.csv";
+    if (mini) {
+        nodes_data_file = "http://localhost:8010/data/nodes-test-mini.csv";
+        edges_data_file = "http://localhost:8010/data/edges-test-mini.csv";
+    } else {
+        nodes_data_file = "http://localhost:8010/data/nodes-test.csv";
+        edges_data_file = "http://localhost:8010/data/edges-test.csv";
+    }
 } else {
     nodes_data_file = "http://localhost:8010/data/nodes.csv";
     edges_data_file = "http://localhost:8010/data/edges.csv";
 }
+
+// functions to set the types of the incoming data
 convert_node_data_fields = function(d) {
     return {
         node_idx: parseInt(d.node_idx),
@@ -19,7 +28,7 @@ convert_node_data_fields = function(d) {
         gene_name: d.gene_name,
         cluster_id: parseInt(d.cluster_id)
     };
-}
+};
 convert_edge_data_fields = function(d) {
     return {
         edge_idx: parseInt(d.edge_idx),
@@ -27,27 +36,16 @@ convert_edge_data_fields = function(d) {
         target: parseInt(d.target),
         weight: parseFloat(d.weight)
     };
-}
+};
 
+// This loads the data files, parses the data and
+// then calls the draw_network function
 Promise.all([
     d3.csv(nodes_data_file, convert_node_data_fields),
     d3.csv(edges_data_file, convert_edge_data_fields)
 ]).then(function(data) {
     draw_network( data[0], data[1] );
 });
-
-//var nodes = [
-//  {"id": "Alice"},
-//  {"id": "Bob"},
-//  {"id": "Carol"}
-//];
-//
-//var links = [
-//  {"source": 0, "target": 1}, // Alice → Bob
-//  {"source": 1, "target": 2} // Bob → Carol
-//];
-
-//draw_network(nodes, links);
 
 function draw_network(node_data, edge_data) {
     if (debug) {
