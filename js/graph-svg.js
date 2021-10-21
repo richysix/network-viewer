@@ -1,9 +1,11 @@
 const testing = false;
 const mini = true;
 const debug = true;
+const width = 960, height = 960;
 
-var width = 960;
-var height = 960;
+// set height and width of svg element
+document.querySelector('#graph_svg').setAttribute("height", height);
+document.querySelector('#graph_svg').setAttribute("width", width);
 
 // set input data based on testing status
 if (testing) {
