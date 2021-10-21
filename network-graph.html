@@ -6,7 +6,14 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png"></head>
 <body>
-    <div id="buttons">
+    <div id="upload">
+        <h2>Data Upload:</h2>
+        <label for="nodes_file">Nodes file:</label>
+        <input id="nodes_file" type="file" onchange="load_nodes_file();">
+        <label for="edges_file">Edges file:</label>
+        <input id="edges_file" type="file" onchange="load_edges_file();">
+    </div>
+    <div id="zoom_controls">
         <button id="reset" type="button">Reset Zoom</button>
         <button id="zoom-in" type="button">Zoom In</button>
         <button id="zoom-out" type="button">Zoom Out</button>

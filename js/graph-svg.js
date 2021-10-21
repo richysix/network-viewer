@@ -7,18 +7,28 @@ const width = 960, height = 960;
 document.querySelector('#graph_svg').setAttribute("height", height);
 document.querySelector('#graph_svg').setAttribute("width", width);
 
-// set input data based on testing status
-if (testing) {
-    if (mini) {
-        nodes_data_file = "http://localhost:8010/data/nodes-test-mini.csv";
-        edges_data_file = "http://localhost:8010/data/edges-test-mini.csv";
-    } else {
-        nodes_data_file = "http://localhost:8010/data/nodes-test.csv";
-        edges_data_file = "http://localhost:8010/data/edges-test.csv";
+/// define readers
+let reader1 = new FileReader();
+let reader2 = new FileReader();
+
+function load_nodes_file() {
+    var file = document.querySelector('#nodes_file').files[0];
+    if (debug) {
+        console.log(document.querySelector('#nodes_file').files);
+        console.log(file);
     }
-} else {
-    nodes_data_file = "http://localhost:8010/data/nodes.csv";
-    edges_data_file = "http://localhost:8010/data/edges.csv";
+    reader1.addEventListener("load", draw_network, false);
+    if (file) {
+      reader1.readAsText(file);
+    }
+}
+
+function load_edges_file() {
+    var file = document.querySelector('#edges_file').files[0];
+    reader2.addEventListener("load", draw_network, false);
+    if (file) {
+      reader2.readAsText(file);
+    }
 }
 
 // functions to set the types of the incoming data
@@ -40,16 +50,13 @@ convert_edge_data_fields = function(d) {
     };
 };
 
-// This loads the data files, parses the data and
-// then calls the draw_network function
-Promise.all([
-    d3.csv(nodes_data_file, convert_node_data_fields),
-    d3.csv(edges_data_file, convert_edge_data_fields)
-]).then(function(data) {
-    draw_network( data[0], data[1] );
-});
+function draw_network() {
+    if (!reader1.result || !reader2.result) {
+        return;
+    }
+    let node_data = d3.csvParse(reader1.result, convert_node_data_fields);
+    let edge_data = d3.csvParse(reader2.result, convert_edge_data_fields);
 
-function draw_network(node_data, edge_data) {
     if (debug) {
         console.log(node_data);
         console.log(edge_data);
