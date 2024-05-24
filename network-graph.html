@@ -2,24 +2,30 @@
 <meta charset="utf-8">
 <head>
     <link rel="stylesheet" type="text/css" href="css/graph.css">
-    <script src="https://d3js.org/d3.v5.min.js" charset="utf-8"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <!-- <script src="https://d3js.org/d3.v5.min.js" charset="utf-8"></script> -->
     <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png"></head>
 <body>
     <div id="upload">
         <h2>Data Upload:</h2>
-        <label for="nodes_file">Nodes file:</label>
-        <input id="nodes_file" type="file" onchange="load_nodes_file();">
-        <label for="edges_file">Edges file:</label>
-        <input id="edges_file" type="file" onchange="load_edges_file();">
+        <form id="filesform">
+            <label for="nodes-file">Nodes file:</label>
+            <input id="nodes-file" type="file" onchange="load_nodes_file();">
+            <label for="edges-file">Edges file:</label>
+            <input id="edges-file" type="file" onchange="load_edges_file();">
+        </form>
+    </div>
+    <div id="reset-div">
+        <button id="reset" type="button">Clear Network</button>
     </div>
     <div id="zoom_controls">
-        <button id="reset" type="button">Reset Zoom</button>
+        <button id="reset-zoom" type="button">Reset Zoom</button>
         <button id="zoom-in" type="button">Zoom In</button>
         <button id="zoom-out" type="button">Zoom Out</button>
     </div>
-    <div>
-        <svg id="graph_svg" class="graph" width="480" height="480"></svg>
+    <div id="graph-container">
+        <svg id="graph-svg" class="graph"></svg>
     </div>
     <script src="js/graph-svg.js" charset="utf-8"></script>
 </body>
