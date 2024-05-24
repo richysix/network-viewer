@@ -18,3 +18,8 @@ div.tooltip {
     border-radius: 8px;
     pointer-events: none;
 }
+
+#graph-svg {
+    border-style: solid;
+    border-width: 1px;
+}
